@@ -4,20 +4,29 @@ import './heroes.css';
 export class Heroes extends Component {
     constructor(props) {
         super(props);
-        this.state = {nuevoHeroe: "Wonder Woman", heroes: ["Batman", "Superman", "Spiderman"]};
+        this.state = {
+            nuevoHeroe: "Wonder Woman", heroes: [
+                { name: "Batman", description: "dark knight" },
+                { name: "Superman", description: "man of steel" },
+                { name: "Spiderman", description: "spidy" }]
+        };
     }
 
-    handleChange(event){
-        this.setState({nuevoHeroe: event.target.value})
+    handleChange(event) {
+        this.setState({ nuevoHeroe: event.target.value })
     }
 
-    handleClick(){
+    handleClick() {
         const temp = [...this.state.heroes, this.state.nuevoHeroe];
-        this.setState({heroes: temp});
+        this.setState({ heroes: temp });
     }
 
     render() {
-        const listHeroes = this.state.heroes.map((hero, index) => <li className="list-group-item" key={index} id={'hero-li-' + index}>{hero}</li>);
+        const listHeroes = this.state.heroes.map((hero, index) =>
+            <li className="list-group-item" key={index} id={'hero-li-' + index}>
+                <h4>{hero.name}</h4>
+                <p>{hero.description}</p>
+            </li>);
         console.log(listHeroes);
         return (
             <div className="container">
@@ -25,9 +34,9 @@ export class Heroes extends Component {
                 <div className="form-group">
                     <label for="">Heroes</label>
                     <input type="text"
-                        className="form-control" name="" id="" aria-describedby="helpId" placeholder="" 
-                        value={this.state.nuevoHeroe} onChange={(event)=>this.handleChange(event)}/>
-                    <button type="button" class="btn btn-primary" onClick={()=>this.handleClick()}>Nuevo héroe</button>
+                        className="form-control" name="" id="" aria-describedby="helpId" placeholder=""
+                        value={this.state.nuevoHeroe} onChange={(event) => this.handleChange(event)} />
+                    <button type="button" class="btn btn-primary" onClick={() => this.handleClick()}>Nuevo héroe</button>
                 </div>
                 <ul className="list-group">
                     {listHeroes}
