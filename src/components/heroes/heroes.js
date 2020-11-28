@@ -5,7 +5,9 @@ export class Heroes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nuevoHeroe: { name: 'Wonder woman', description: '' }, heroes: [
+            disable: false,
+            nuevoHeroe: { name: 'Wonder woman', description: '' },
+            heroes: [
                 { name: "Batman", description: "dark knight" },
                 { name: "Superman", description: "man of steel" },
                 { name: "Spiderman", description: "spidy" }]
@@ -16,6 +18,7 @@ export class Heroes extends Component {
         if (event.target.id === 'name') {
             const heroe = { name: event.target.value, description: this.state.nuevoHeroe.description };
             this.setState({ nuevoHeroe: heroe })
+            this.setState({ disable: this.state.heroes.find((element) => event.target.value === element.name) })
         } else if (event.target.id === 'description') {
             const heroe = { description: event.target.value, name: this.state.nuevoHeroe.name };
             this.setState({ nuevoHeroe: heroe })
@@ -28,11 +31,11 @@ export class Heroes extends Component {
         console.log(temp);
     }
 
-    handleRemove(index){
+    handleRemove(index) {
         console.log(index);
         let temp = this.state.heroes;
-        temp.splice(index,1);
-        this.setState({heroes: temp})
+        temp.splice(index, 1);
+        this.setState({ heroes: temp })
     }
 
     render() {
@@ -44,7 +47,7 @@ export class Heroes extends Component {
                         <p>{hero.description}</p>
                     </div>
                     <div class="container-fluid d-flex justify-content-end">
-                        <button type="button" class="btn btn-danger" onClick={()=>{this.handleRemove(index)}}>Eliminar</button>
+                        <button type="button" class="btn btn-danger" onClick={() => { this.handleRemove(index) }}>Eliminar</button>
                     </div>
                 </div>
             </li>);
@@ -63,7 +66,7 @@ export class Heroes extends Component {
                         className="form-control" name="" id="description" aria-describedby="helpId" placeholder=""
                         value={this.state.nuevoHeroe.description} onChange={(event) => this.handleChange(event)} />
 
-                    <button type="button" class="btn btn-primary" onClick={() => this.handleClick()}>Nuevo héroe</button>
+                    <button type="button" class="btn btn-primary" onClick={() => this.handleClick()} disabled={this.state.disable}>Nuevo héroe</button>
                 </div>
                 <ul className="list-group">
                     {listHeroes}
