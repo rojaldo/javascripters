@@ -16,7 +16,7 @@ export class Beers extends Component {
                     </div>
                     <div className="card-body">
                         <h4 className="card-title">{beer.name}</h4>
-                        <h6 class="card-subtitle text-muted">{beer.abv}%</h6>
+                        <h6 className="card-subtitle text-muted">{beer.abv}%</h6>
                         <p className="card-text">{beer.description}</p>
                     </div>
                 </div>

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Display } from './display';
+import { Keyboard } from './keyboard';
 import './calculator.css';
 
 const INICIAL = 0;
@@ -20,40 +22,13 @@ export class Calculator extends Component {
     render() {
         return (
             <div className="container">
-                <div className="alert alert-light d-flex justify-content-end" role="alert">
-                    <strong id="display" className="h2">{this.state.display}</strong>
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(7)}>7</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(4)}>4</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(1)}>1</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('.')}>.</button>
-                    </div>
-                    <div className="col-3">
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(8)}>8</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(5)}>5</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(2)}>2</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(0)}>0</button>
-                    </div>
-                    <div className="col-3">
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(9)}>9</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(6)}>6</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick(3)}>3</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('=')}>=</button>
-                    </div>
-                    <div className="col-3">
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('+')}>+</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('-')}>-</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('*')}>*</button>
-                        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => this.handleClick('/')}>/</button>
-                    </div>
-                </div>
+                <Display mydisplay={this.state.display}></Display>
+                <Keyboard myevent={(value) => { this.handleEvent(value) }}></Keyboard>
             </div>
         );
     }
 
-    handleClick(valor) {
+    handleEvent(valor) {
         console.log(valor);
         // this.actualizarDisplay(valor);
         if (typeof valor === 'number') {
@@ -69,7 +44,7 @@ export class Calculator extends Component {
             case INICIAL:
                 this.primerNumero = numero;
                 temp = '' + numero;
-                this.setState({display: temp})
+                this.setState({ display: temp })
                 this.estado = PRIMERNUMERO;
                 break;
             case PRIMERNUMERO:
@@ -83,8 +58,8 @@ export class Calculator extends Component {
             case RESULTADO:
                 this.inicializaCalculadora();
                 this.primerNumero = numero;
-                temp ='' + numero;
-                this.setState({display: temp})
+                temp = '' + numero;
+                this.setState({ display: temp })
                 this.estado = PRIMERNUMERO;
                 break;
 
@@ -113,14 +88,14 @@ export class Calculator extends Component {
                 }
                 break;
             case RESULTADO:
-                if(this.esOperador(simbolo)){
+                if (this.esOperador(simbolo)) {
                     this.primerNumero = this.resultado;
                     this.operador = simbolo;
                     this.segundoNumero = 0;
                     this.resultado = 0;
                     const temp = this.primerNumero + this.operador;
-                    this.setState({display: temp});
-                    this.estado = SEGUNDONUMERO;    
+                    this.setState({ display: temp });
+                    this.estado = SEGUNDONUMERO;
                 }
                 break;
 
