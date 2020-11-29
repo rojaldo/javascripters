@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import {HeroesList} from './heroeslist';
+import {HeroForm} from './form';
 import './heroes.css';
 
 export class Heroes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            disable: false,
-            nuevoHeroe: { name: 'Wonder woman', description: '' },
             heroes: [
                 { name: "Batman", description: "dark knight" },
                 { name: "Superman", description: "man of steel" },
@@ -14,22 +14,7 @@ export class Heroes extends Component {
         };
     }
 
-    handleChange(event) {
-        if (event.target.id === 'name') {
-            const heroe = { name: event.target.value, description: this.state.nuevoHeroe.description };
-            this.setState({ nuevoHeroe: heroe })
-            this.setState({ disable: this.state.heroes.find((element) => event.target.value === element.name) })
-        } else if (event.target.id === 'description') {
-            const heroe = { description: event.target.value, name: this.state.nuevoHeroe.name };
-            this.setState({ nuevoHeroe: heroe })
-        }
-    }
 
-    handleClick() {
-        const temp = [...this.state.heroes, this.state.nuevoHeroe];
-        this.setState({ heroes: temp });
-        console.log(temp);
-    }
 
     handleRemove(index) {
         console.log(index);
@@ -38,38 +23,19 @@ export class Heroes extends Component {
         this.setState({ heroes: temp })
     }
 
+    handleNewHero(hero) {
+        const temp = [...this.state.heroes, hero];
+        console.log(JSON.stringify(temp));
+        this.setState({heroes: temp});
+    }
+
     render() {
-        const listHeroes = this.state.heroes.map((hero, index) =>
-            <li className="list-group-item" key={index} id={'hero-li-' + index}>
-                <div className="d-flex justify-content-between">
-                    <div className="container">
-                        <h4>{hero.name}</h4>
-                        <p>{hero.description}</p>
-                    </div>
-                    <div className="container-fluid d-flex justify-content-end">
-                        <button type="button" className="btn btn-danger" onClick={() => { this.handleRemove(index) }}>Eliminar</button>
-                    </div>
-                </div>
-            </li>);
+
         return (
             <div className="container">
                 <h1>Esta es una lista de héroes</h1>
-                <div className="form-group">
-                    <label>Nombre del héroe</label>
-                    <input type="text"
-                        className="form-control" name="" id="name" aria-describedby="helpId" placeholder=""
-                        value={this.state.nuevoHeroe.name} onChange={(event) => this.handleChange(event)} />
-
-                    <label>Descripción</label>
-                    <input type="text"
-                        className="form-control" name="" id="description" aria-describedby="helpId" placeholder=""
-                        value={this.state.nuevoHeroe.description} onChange={(event) => this.handleChange(event)} />
-
-                    <button type="button" className="btn btn-primary" onClick={() => this.handleClick()} disabled={this.state.disable}>Nuevo héroe</button>
-                </div>
-                <ul className="list-group">
-                    {listHeroes}
-                </ul>
+                <HeroForm heroes={this.state.heroes} newhero={(hero)=> this.handleNewHero(hero)}></HeroForm>
+                <HeroesList heroes={this.state.heroes} remove={(i)=>{this.handleRemove(i)}}></HeroesList>
             </div>
         );
 
