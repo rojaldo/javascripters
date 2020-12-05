@@ -45,7 +45,7 @@ export class Beers extends Component {
             case ordenacionalfabetica:
                 listBeers = this.state.beers
                     .filter(element => element.abv >= this.state.value[0] && element.abv <= this.state.value[1])
-                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .sort((a, b) => a.name.localeCompare(b.name))
                     .map((beer, index) =>
                         <div className="col-sm-12 col-md-6 col-lg-4 mt-2" key={index}>
                             <BeerCard beer={beer}></BeerCard>
@@ -56,7 +56,7 @@ export class Beers extends Component {
             case ordenacionalcohol:
                 listBeers = this.state.beers
                     .filter(element => element.abv >= this.state.value[0] && element.abv <= this.state.value[1])
-                    .sort((a,b)=>a.abv-b.abv)
+                    .sort((a, b) => a.abv - b.abv)
                     .map((beer, index) =>
                         <div className="col-sm-12 col-md-6 col-lg-4 mt-2" key={index}>
                             <BeerCard beer={beer}></BeerCard>
@@ -107,7 +107,6 @@ export class Beers extends Component {
             .then((respuesta) => respuesta.json())
             .then(
                 (data) => {
-                    console.log('Esta es la respuesta: ' + JSON.stringify(data));
                     this.setState({ beers: data });
                 },
                 (error) => { console.error('La cosa ha ido mal: ' + error) }
