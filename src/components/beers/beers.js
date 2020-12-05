@@ -18,7 +18,7 @@ export class Beers extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { beers: [], value: [20, 25] }
+        this.state = { beers: [], value: [0, 5] }
     }
 
     render() {
