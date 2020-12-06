@@ -32,6 +32,8 @@ export class DateApod extends Component {
                     InputLabelProps={{
                         shrink: true,
                     }}
+
+                    InputProps={{inputProps: { min: "1995-09-01", max: Moment(new Date()).format("YYYY-MM-DD")} }}
                 />
             </Fragment>);
     }

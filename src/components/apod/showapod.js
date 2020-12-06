@@ -8,10 +8,23 @@ export class ShowApod extends Component {
         this.state = { apod: {} }
     }
 
-    UNSAFE_componentWillReceiveProps(props) {
-        console.log('shouldComponentUpdate');
-        this.handleDateChange(props.myDate);
-        return true;
+    // UNSAFE_componentWillReceiveProps(props) {
+    //     console.log('shouldComponentUpdate');
+    //     this.handleDateChange(this.props.myDate);
+    //     return true;
+    // }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.myDate !== prevState.myDate) {
+            return { someState: nextProps.myDate };
+        }
+        else return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.myDate !== this.props.myDate) {
+            this.handleDateChange(this.props.myDate);
+        }
     }
 
     componentDidMount() {
@@ -45,9 +58,9 @@ export class ShowApod extends Component {
         if (this.state.apod.media_type === 'image') {
             content = <img className="card-img-top" src={this.state.apod.url} alt="" />
         } else if (this.state.apod.media_type === 'video') {
-            content = <ReactPlayer url={this.state.apod.url} className="w-100"/>
+            content = <ReactPlayer url={this.state.apod.url} className="w-100" />
         }
-        if (this.state.apod !== {}) {
+        if (this.state.apod !== {} && this.state.apod.code === undefined) {
             myRender = <div className="jumbotron m-4">
                 <h1 className="display-4">{this.state.apod.title}</h1>
                 {content}
@@ -58,7 +71,13 @@ export class ShowApod extends Component {
                     <a className="btn btn-primary btn-lg" href={this.state.apod.hdurl} role="button">Descargar</a>
                 </p>
             </div>
-        } else {
+        } else if (this.state.apod !== {} && this.state.apod.code === 400){
+            myRender = <div class="alert alert-danger" role="alert">
+                <strong>Fecha del futuro</strong>
+            </div>
+        }
+        
+        else {
             <h1>loading...</h1>
         }
         return (
