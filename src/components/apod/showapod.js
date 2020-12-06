@@ -28,20 +28,13 @@ export class ShowApod extends Component {
     }
 
     componentDidMount() {
-        const apiURL = 'https://api.nasa.gov/planetary/apod?api_key=tqz634Z1x0LiJzjbhSyUoExrZaGKLM0MG1VnROR6';
-        fetch(apiURL)
-            .then((respuesta) => respuesta.json())
-            .then(
-                (data) => {
-                    this.setState({ apod: data })
-                },
-                (error) => { console.error('La cosa ha ido mal: ' + error) }
-            );
+        console.log('myDate: ' + this.props.myDate);
+        this.handleDateChange(this.props.myDate);
     }
 
     handleDateChange = (myDate) => {
         console.log(myDate);
-        const apiURL = 'https://api.nasa.gov/planetary/apod?api_key=tqz634Z1x0LiJzjbhSyUoExrZaGKLM0MG1VnROR6&date=' + myDate;
+        const apiURL = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=' + myDate;
         fetch(apiURL)
             .then((respuesta) => respuesta.json())
             .then(
@@ -56,20 +49,19 @@ export class ShowApod extends Component {
         let myRender = {};
         let content = <div></div>
         if (this.state.apod.media_type === 'image') {
-            content = <img className="card-img-top" src={this.state.apod.url} alt="" />
+            content = <img className="card-img-top w-100" src={this.state.apod.url} alt="" />
         } else if (this.state.apod.media_type === 'video') {
             content = <ReactPlayer url={this.state.apod.url} className="w-100" />
         }
         if (this.state.apod !== {} && this.state.apod.code === undefined) {
-            myRender = <div className="jumbotron m-4">
-                <h1 className="display-4">{this.state.apod.title}</h1>
+            myRender = 
+            <div class="card">
                 {content}
-                <p className="lead">{this.state.apod.date}</p>
-                <hr className="my-2" />
-                <p>{this.state.apod.explanation}</p>
-                <p className="lead">
-                    <a className="btn btn-primary btn-lg" href={this.state.apod.hdurl} role="button">Descargar</a>
-                </p>
+                <div class="card-body">
+                    <h4 class="card-title">{this.state.apod.title}</h4>
+                    <h6 class="card-title">{this.state.apod.date}</h6>
+                    <p class="card-text">{this.state.apod.explanation}</p>
+                </div>
             </div>
         } else if (this.state.apod !== {} && this.state.apod.code === 400){
             myRender = <div class="alert alert-danger" role="alert">
