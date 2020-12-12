@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import './countries.css';
 import { Country } from '../../model/country';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const ALPHABETIC = 0;
 const POPULATION = 1;
@@ -8,9 +10,10 @@ const AREA = 2;
 const DENSITY = 3;
 
 export class Countries extends Component {
+
     constructor(props) {
         super(props);
-        this.state = { countries: [], showCountries: [] }
+        this.state = { countries: [], showCountries: [], myFilterString: '', sort: ALPHABETIC, change: false, desc: false }
     }
 
     componentDidMount() {
@@ -30,43 +33,75 @@ export class Countries extends Component {
             );
     }
 
-    orderByPopulation() {
-        const temp = this.state.countries.sort((a, b) => { return a.population - b.population });
-        this.setState({ showCountries: temp });
-    }
-    orderByArea() {
-        const temp = this.state.countries.sort((a, b) => { return a.area - b.area });
-        this.setState({ showCountries: temp });
-    }
-    orderByDensity() {
-        const temp = this.state.countries.sort((a, b) => { return a.density - b.density });
-        this.setState({ showCountries: temp });
-    }
-    orderByAlPhabetic() {
-        const temp = this.state.countries.sort((a, b) => { return a.name.localeCompare(b.name) });
-        this.setState({ showCountries: temp });
+    componentDidUpdate() {
+        if (this.state.change === true) {
+            this.filterArray();
+            this.setState({ change: false });
+        } else {
+
+        }
     }
 
-    handleSelect(e) {
-        console.log(e.target.value);
-        switch (parseInt(e.target.value)) {
+    orderByPopulation(countries, asc) {
+        if (asc) return countries.sort((a, b) => { return a.population - b.population });            
+        return countries.sort((a, b) => { return b.population - a.population });            
+        
+    }
+    orderByArea(countries, asc) {
+        if (asc) return countries.sort((a, b) => { return a.area - b.area });
+        return countries.sort((a, b) => { return b.area - a.area });
+    }
+    orderByDensity(countries, asc) {
+        if (asc) return countries.sort((a, b) => { return a.density - b.density });
+        return countries.sort((a, b) => { return b.density - a.density });
+    }
+    orderByAlPhabetic(countries, asc) {
+        if (asc) return countries.sort((a, b) => { return a.name.localeCompare(b.name) });
+        return countries.sort((a, b) => { return b.name.localeCompare(a.name) });
+    }
+
+    filterArray() {
+        let temp = this.state.countries.filter((country) => {
+            console.log(country + ': ' + country.name.toLowerCase().startsWith(this.state.myFilterString.toLowerCase()));
+            return country.name.toLowerCase().startsWith(this.state.myFilterString.toLowerCase())
+        });
+
+        switch (this.state.sort) {
             case ALPHABETIC:
-                this.orderByAlPhabetic();
+                temp = this.orderByAlPhabetic(temp, !this.state.desc);
                 break;
             case POPULATION:
-                this.orderByPopulation();
+                temp = this.orderByPopulation(temp, !this.state.desc);
                 break;
             case AREA:
-                this.orderByArea();
+                temp = this.orderByArea(temp, !this.state.desc);
                 break;
             case DENSITY:
-                this.orderByDensity();
+                temp = this.orderByDensity(temp, !this.state.desc);
                 break;
-
             default:
                 console.error('Wrong option');
                 break;
         }
+
+
+
+        this.setState({ showCountries: temp });
+    }
+
+    handleSelection(event) {
+        console.log(event.target.value);
+        this.setState({ sort: parseInt(event.target.value), change: true })
+
+    }
+
+    handleChange(event) {
+        console.log(event.target.value);
+        this.setState({ myFilterString: event.target.value, change: true });
+    }
+
+    handleDescAsc(value) {
+        this.setState({ desc: value, change: true });
     }
 
     render() {
@@ -92,15 +127,23 @@ export class Countries extends Component {
             <Fragment>
                 <div className="container">
                     <div class="form-group">
+                        <label for="">Filtrado</label>
+                        <input type="text"
+                            class="form-control" name="" id="" aria-describedby="helpId" placeholder="" value={this.state.myFilterString} onChange={(event) => this.handleChange(event)} />
+                        <small id="helpId" class="form-text text-muted">Help text</small>
                         <label for="">Criterio de ordenación</label>
-                        <select class="form-control" name="" id="" onChange={(e) => this.handleSelect(e)}>
+                        <select class="form-control" name="" id="" onChange={(e) => this.handleSelection(e)}>
                             <option value={ALPHABETIC}>Alfabético</option>
                             <option value={POPULATION}>Población</option>
                             <option value={AREA}>Área</option>
                             <option value={DENSITY}>Densidad</option>
                         </select>
+                        <label for="">asc/desc</label>
+                        <DropdownButton id="dropdown-basic-button" title={this.state.desc ? 'Descendente': 'Ascendente'} >
+                            <Dropdown.Item eventKey="0" onSelect={(eventKey, event)=>{this.handleDescAsc(true);}}>Descendente</Dropdown.Item>
+                            <Dropdown.Item eventKey="1" onSelect={(eventKey, event)=>{this.handleDescAsc(false);}}>Ascendente</Dropdown.Item>
+                        </DropdownButton>
                     </div>
-                    <button type="button" class="btn btn-primary" onClick={() => this.orderByPopulation()}>Ordenar por población</button>
                     <div className="row">
                         {listCountries}
                     </div>
