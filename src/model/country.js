@@ -4,6 +4,7 @@ export class Country {
         this.capital= country.capital;
         this.population = country.population;
         this.area = country.area;
+        this.density = this.population / this.area;
     }
 
     getPopulationInMilions(){
