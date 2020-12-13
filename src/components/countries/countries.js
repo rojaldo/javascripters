@@ -3,6 +3,8 @@ import './countries.css';
 import { Country } from '../../model/country';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
+import Alert from 'react-bootstrap/Alert';
 
 const ALPHABETIC = 0;
 const POPULATION = 1;
@@ -42,51 +44,51 @@ export class Countries extends Component {
         }
     }
 
-    orderByPopulation(countries, asc) {
-        if (asc) return countries.sort((a, b) => { return a.population - b.population });            
-        return countries.sort((a, b) => { return b.population - a.population });            
-        
+    orderByPopulation(countries) {
+        if (this.state.desc) return countries.sort((a, b) => b.population - a.population);
+        return countries.sort((a, b) => a.population - b.population);
     }
-    orderByArea(countries, asc) {
-        if (asc) return countries.sort((a, b) => { return a.area - b.area });
-        return countries.sort((a, b) => { return b.area - a.area });
+
+    orderByArea(countries) {
+        if (this.state.desc) return countries.sort((a, b) => b.area - a.area);
+        return countries.sort((a, b) => a.area - b.area);
     }
-    orderByDensity(countries, asc) {
-        if (asc) return countries.sort((a, b) => { return a.density - b.density });
-        return countries.sort((a, b) => { return b.density - a.density });
+
+    orderByDensity(countries) {
+        if (this.state.desc) return countries.sort((a, b) => b.density - a.density);
+        return countries.sort((a, b) => a.density - b.density);
     }
-    orderByAlPhabetic(countries, asc) {
-        if (asc) return countries.sort((a, b) => { return a.name.localeCompare(b.name) });
-        return countries.sort((a, b) => { return b.name.localeCompare(a.name) });
+
+    orderByAlPhabetic(countries) {
+        if (this.state.desc) return countries.sort((a, b) => b.name.localeCompare(a.name));
+        return countries.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     filterArray() {
-        let temp = this.state.countries.filter((country) => {
+        let orderedCountries = [];
+        let filteredCountries = this.state.countries.filter((country) => {
             console.log(country + ': ' + country.name.toLowerCase().startsWith(this.state.myFilterString.toLowerCase()));
             return country.name.toLowerCase().startsWith(this.state.myFilterString.toLowerCase())
         });
-
         switch (this.state.sort) {
             case ALPHABETIC:
-                temp = this.orderByAlPhabetic(temp, !this.state.desc);
+                orderedCountries = this.orderByAlPhabetic(filteredCountries);
                 break;
             case POPULATION:
-                temp = this.orderByPopulation(temp, !this.state.desc);
+                orderedCountries = this.orderByPopulation(filteredCountries);
                 break;
             case AREA:
-                temp = this.orderByArea(temp, !this.state.desc);
+                orderedCountries = this.orderByArea(filteredCountries);
                 break;
             case DENSITY:
-                temp = this.orderByDensity(temp, !this.state.desc);
+                orderedCountries = this.orderByDensity(filteredCountries);
                 break;
             default:
                 console.error('Wrong option');
                 break;
         }
 
-
-
-        this.setState({ showCountries: temp });
+        this.setState({ showCountries: orderedCountries });
     }
 
     handleSelection(event) {
@@ -95,9 +97,9 @@ export class Countries extends Component {
 
     }
 
-    handleChange(event) {
-        console.log(event.target.value);
-        this.setState({ myFilterString: event.target.value, change: true });
+    handleChange(value) {
+        console.log(value);
+        this.setState({ myFilterString: value, change: true });
     }
 
     handleDescAsc(value) {
@@ -126,22 +128,28 @@ export class Countries extends Component {
         return (
             <Fragment>
                 <div className="container">
-                    <div class="form-group">
+                    <div className="form-group">
                         <label for="">Filtrado</label>
-                        <input type="text"
-                            class="form-control" name="" id="" aria-describedby="helpId" placeholder="" value={this.state.myFilterString} onChange={(event) => this.handleChange(event)} />
-                        <small id="helpId" class="form-text text-muted">Help text</small>
+                        <Typeahead
+                            emptyLabel="No hay países con esa selección"
+                            onChange={(selected) => this.handleChange(selected)}
+                            onInputChange={(selected) => this.handleChange(selected)}
+                            options={this.state.showCountries.map((country) => country.name)}
+                        />
+                        <Alert variant="danger" show={this.state.showCountries.length > 0 ? false : true}>
+                            No hay un páis que comience por ese texto!
+                        </Alert>
                         <label for="">Criterio de ordenación</label>
-                        <select class="form-control" name="" id="" onChange={(e) => this.handleSelection(e)}>
+                        <select className="form-control" name="" id="" onChange={(e) => this.handleSelection(e)}>
                             <option value={ALPHABETIC}>Alfabético</option>
                             <option value={POPULATION}>Población</option>
                             <option value={AREA}>Área</option>
                             <option value={DENSITY}>Densidad</option>
                         </select>
                         <label for="">asc/desc</label>
-                        <DropdownButton id="dropdown-basic-button" title={this.state.desc ? 'Descendente': 'Ascendente'} >
-                            <Dropdown.Item eventKey="0" onSelect={(eventKey, event)=>{this.handleDescAsc(true);}}>Descendente</Dropdown.Item>
-                            <Dropdown.Item eventKey="1" onSelect={(eventKey, event)=>{this.handleDescAsc(false);}}>Ascendente</Dropdown.Item>
+                        <DropdownButton id="dropdown-basic-button" title={this.state.desc ? 'Descendente' : 'Ascendente'} >
+                            <Dropdown.Item eventKey="0" onSelect={(eventKey, event) => { this.handleDescAsc(true); }}>Descendente</Dropdown.Item>
+                            <Dropdown.Item eventKey="1" onSelect={(eventKey, event) => { this.handleDescAsc(false); }}>Ascendente</Dropdown.Item>
                         </DropdownButton>
                     </div>
                     <div className="row">
