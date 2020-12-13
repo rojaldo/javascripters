@@ -16,9 +16,12 @@ export class Trivial extends Component {
             .then((respuesta) => respuesta.json())
             .then(
                 (data) => {
-                    const card = new Card(data.results[0])
-                    const myCards = [card];
-                    this.setState({ response: data , cards: myCards, resolved: true});
+                    let myCards = [];
+                    for (const jsonCard of data.results) {
+                        const card = new Card(jsonCard)
+                        myCards.push(card);
+                    }
+                    this.setState({ response: data, cards: myCards, resolved: true });
 
 
                 },
@@ -26,19 +29,24 @@ export class Trivial extends Component {
             );
     }
 
-    render() { 
+    render() {
         let content = <div></div>
-        if (this.state.resolved){
-            content = <TrivialCard data={this.state.cards[0]}></TrivialCard>
+        if (this.state.resolved) {
+            content = this.state.cards.map((card, index) =>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mt-2">
+                    <TrivialCard key={index} data={card}></TrivialCard>
+                </div>);
         }
-    return ( 
+        return (
             <Fragment>
                 <div class="container">
-                    {content}
+                    <div class="row">
+                        {content}
+                    </div>
                 </div>
             </Fragment>
-         );
+        );
     }
 }
- 
+
 export default Trivial;
