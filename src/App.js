@@ -3,6 +3,7 @@ import { Heroes } from './components/heroes/heroes';
 import { Beers } from './components/beers/beers';
 import { Apod } from './components/apod/apod';
 import { Countries } from './components/countries/countries';
+import { Trivial } from './components/trivial/trivial';
 
 import {
   BrowserRouter as Router,
@@ -35,6 +36,9 @@ function App() {
             <li class="nav-item">
               <Link to="/countries" class="nav-link">Countries</Link>
             </li>
+            <li class="nav-item">
+              <Link to="/trivial" class="nav-link">Trivial</Link>
+            </li>
           </ul>
         </nav>
 
@@ -54,8 +58,11 @@ function App() {
           <Route path="/countries">
             <Countries />
           </Route>
+          <Route path="/trivial">
+            <Trivial />
+          </Route>
           <Route path="/">
-            <Countries />
+            <Trivial />
           </Route>
         </Switch>
       </div>
