@@ -6,11 +6,10 @@ import { Card } from '../../model/card';
 export class Trivial extends Component {
     constructor(props) {
         super(props);
-        this.state = { response: {}, cards: [], resolved: false }
+        this.state = { response: {}, cards: [], resolved: false, points: 0 }
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
         const apiURL = 'https://opentdb.com/api.php?amount=10';
         fetch(apiURL)
             .then((respuesta) => respuesta.json())
@@ -22,26 +21,37 @@ export class Trivial extends Component {
                         myCards.push(card);
                     }
                     this.setState({ response: data, cards: myCards, resolved: true });
-
-
                 },
                 (error) => { console.error('La cosa ha ido mal: ' + error) }
             );
+    }
+
+    handlePoints(points) {
+        const temp = this.state.points + points;
+        this.setState({ points: temp });
     }
 
     render() {
         let content = <div></div>
         if (this.state.resolved) {
             content = this.state.cards.map((card, index) =>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mt-2">
-                    <TrivialCard key={index} data={card}></TrivialCard>
+                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 mt-2" key={index}>
+                    <TrivialCard data={card} onPoints={(points => this.handlePoints(points))}></TrivialCard>
                 </div>);
         }
         return (
             <Fragment>
-                <div class="container">
-                    <div class="row">
-                        {content}
+                <div class="container-fluid">
+                    <div class="sticky-top">
+                        <button type="button" class="btn btn-primary">
+                            Puntos <span class="badge badge-light">{this.state.points}</span>
+                        </button>
+                    </div>
+
+                    <div className="container">
+                        <div className="row">
+                            {content}
+                        </div>
                     </div>
                 </div>
             </Fragment>

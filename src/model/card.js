@@ -19,7 +19,7 @@ export class Card{
     }
 
     setAnswer(index){
-        this.answerIndex = parseInt(index);
+        this.answerIndex = index;
     }
 
     getAnswerIndex() {
@@ -32,5 +32,13 @@ export class Card{
 
     isTheIncorrectAnswer(index){
         return (index === this.answerIndex) && !this.isTheCorrectAnswer(index)
+    }
+
+    getPoints(index){
+        if(this.isTheCorrectAnswer(index)){
+            return 2;
+        }else {
+            return -1;
+        }
     }
 }

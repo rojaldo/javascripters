@@ -19,25 +19,25 @@ function App() {
 
     <Router>
       <div>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item">
-              <Link to="/calculator" class="nav-link">Calculator</Link>
+        <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
+          <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li className="nav-item">
+              <Link to="/calculator" className="nav-link">Calculator</Link>
             </li>
-            <li class="nav-item">
-              <Link to="/heroes" class="nav-link">Heroes</Link>
+            <li className="nav-item">
+              <Link to="/heroes" className="nav-link">Heroes</Link>
             </li>
-            <li class="nav-item">
-              <Link to="/beers" class="nav-link">Beers</Link>
+            <li className="nav-item">
+              <Link to="/beers" className="nav-link">Beers</Link>
             </li>
-            <li class="nav-item">
-              <Link to="/apod" class="nav-link">Apod</Link>
+            <li className="nav-item">
+              <Link to="/apod" className="nav-link">Apod</Link>
             </li>
-            <li class="nav-item">
-              <Link to="/countries" class="nav-link">Countries</Link>
+            <li className="nav-item">
+              <Link to="/countries" className="nav-link">Countries</Link>
             </li>
-            <li class="nav-item">
-              <Link to="/trivial" class="nav-link">Trivial</Link>
+            <li className="nav-item">
+              <Link to="/trivial" className="nav-link">Trivial</Link>
             </li>
           </ul>
         </nav>
